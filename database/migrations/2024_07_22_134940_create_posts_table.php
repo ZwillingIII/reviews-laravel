@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('description');
-            $table->integer('user_id');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
         });

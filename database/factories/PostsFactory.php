@@ -19,7 +19,6 @@ class PostsFactory extends Factory
         return [
             'title' => fake()->title,
             'description' => fake()->text,
-            'user_id' => 6,
             'created_at' => now(),
             'updated_at' => now(),
         ];
