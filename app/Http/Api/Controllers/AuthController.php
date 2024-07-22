@@ -2,35 +2,60 @@
 
 namespace App\Http\Api\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AuthController extends BaseController
 {
-    public function index(Request $request)
+    public function register(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'phone' => 'required|min:11|max:11',
         ]);
 
+        $user = User::where('phone', $data['phone'])->first();
 
+        if (!$user) {
+            try {
+                DB::table('users')->insert([
+                    'phone' => $data['phone'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
 
-//        $phone = preg_replace('/[^0-9]/', "", $request->input('phone'));
-//        $user = DB::table('users')->where('phone', $phone)->first();
+                $user = User::where('phone', $data['phone'])->first();
 
-        // TODO: Сделать получение токена через модель User
+                $token = $user->createToken('user-' . $user['id'])->plainTextToken;
+                DB::table('users')->where('phone', $data['phone'])->update(['remember_token' => $token]);
 
+                return $this->success([
+                    'token' => $token,
+                ]);
+            } catch (\Exception $e) {
+                $this->fail($e->getMessage(), 500);
+            }
+        }
 
+        return $this->fail('Пользователь с таким номером уже существует. Пожалуйста, авторизуйтесь', 403);
+    }
 
-//        if (!$user) {
-//            $user = UserController::add($phone);
-//        }
+    public function auth(Request $request)
+    {
+        $data = $request->validate([
+            'phone' => 'required|min:11|max:11',
+        ]);
 
-//        $user->createToken($request->input('phone'))->plainTextToken;
+        $user = User::where('phone', $data['phone'])->first();
 
-//        return $this->success([
-//            'token' => $user->createToken($request->input('phone'))->plainTextToken,
-//            'user' => $user
-//        ]);
+        if (!$user) {
+            return $this->fail('Пользователь не найден', 401);
+        }
+
+        return $this->success([
+            'status' => 200,
+            'user' => DB::table('users')->where('phone', $data['phone'])->first(),
+            'pass_key' => substr($data['phone'], -4),
+        ]);
     }
 }
