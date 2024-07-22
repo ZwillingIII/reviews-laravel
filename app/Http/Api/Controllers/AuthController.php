@@ -39,7 +39,7 @@ class AuthController extends BaseController
 
         return $this->success([
             'status' => 200,
-            'user' => DB::table('users')->where('phone', $data['phone'])->first(),
+//            'user' => DB::table('users')->where('phone', $data['phone'])->first(),
             'pass_key' => substr($data['phone'], -4),
         ]);
     }

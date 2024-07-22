@@ -9,17 +9,27 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-        <form method="post" action="/api/auth">
+        <form id="auth-form" method="post" action="/api/auth">
             @csrf
 
-            <div>
+            <div class="label">
                 <label for="phone">Enter your phone</label>
                 <input type="text" id="phone" name="phone" placeholder="Your phone">
+                <div class="error phone-error hidden"></div>
+            </div>
+            <div class="label label-key hidden">
+                <label for="key">Enter key</label>
+                <input type="text" id="key" name="key" placeholder="Key">
+                <div class="error key-error hidden"></div>
             </div>
 
-            <button type="submit">Log in</button>
+            <button name="next">Enter</button>
+
+            <button class="hidden" type="submit">Log in</button>
 
         </form>
     </body>
