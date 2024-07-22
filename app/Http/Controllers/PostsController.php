@@ -17,6 +17,11 @@ class PostsController extends Controller
         return DB::table(self::TABLE)->orderBy($this->orderBy)->paginate($this->count);
     }
 
+    public function getPost($id)
+    {
+        return DB::table(self::TABLE)->where('id', $id)->first();
+    }
+
     public function setCount($count)
     {
         $this->count = $count;
