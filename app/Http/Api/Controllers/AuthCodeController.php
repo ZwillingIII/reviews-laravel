@@ -4,9 +4,13 @@ namespace App\Http\Api\Controllers;
 
 class AuthCodeController extends BaseController
 {
-    public static function getCode(string $phone) : string
+    public static function getCode(string $phone) : string|bool
     {
-        $code = substr($phone, -4);
+        $code = false;
+
+        if (!empty($phone)) {
+            $code = substr($phone, -4);
+        }
 
         return $code;
     }
