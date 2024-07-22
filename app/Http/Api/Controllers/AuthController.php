@@ -52,14 +52,6 @@ class AuthController extends BaseController
             DB::table('users')->where('phone', $data['phone'])->update(['remember_token' => $token]);
         }
 
-        // TODO: Запрашивает пароль
-        if (Auth::attempt([
-            'phone' => $data['phone'],
-            'remember_token' => User::where('phone', $data['phone'])->first()['remember_token'],
-        ])) {
-            $request->session()->regenerate();
-        }
-
         return $this->success([
             'status' => 200,
             'user' => Auth::user(),
