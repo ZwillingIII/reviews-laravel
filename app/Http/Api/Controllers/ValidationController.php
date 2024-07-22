@@ -13,6 +13,8 @@ class ValidationController extends BaseController
                 'phone' => 'required|min:11|max:11',
             ]);
 
+            // TODO: Отправка кода по номеру телефона
+
             return $this->success([
                 'data' => $data,
                 'status' => 200,

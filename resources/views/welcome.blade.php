@@ -21,10 +21,10 @@
                 <input type="text" id="phone" name="phone" placeholder="Your phone">
                 <div class="error phone-error hidden"></div>
             </div>
-            <div class="label label-key hidden">
-                <label for="key">Enter key</label>
-                <input type="text" id="key" name="key" placeholder="Key">
-                <div class="error key-error hidden"></div>
+            <div class="label label-code hidden">
+                <label for="code">Enter code</label>
+                <input type="text" id="code" name="code" placeholder="Code">
+                <div class="error code-error hidden"></div>
             </div>
 
             <button name="next">Enter</button>

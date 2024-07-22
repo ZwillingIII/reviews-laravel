@@ -4,6 +4,7 @@ namespace App\Http\Api\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AuthController extends BaseController
@@ -12,6 +13,7 @@ class AuthController extends BaseController
     {
         $data = $request->validate([
             'phone' => 'required|min:11|max:11',
+            'code' => 'required|min:4|max:4'
         ]);
 
         $user = User::where('phone', $data['phone'])->first();
@@ -26,6 +28,10 @@ class AuthController extends BaseController
 
                 $user = User::where('phone', $data['phone'])->first();
 
+                if (!AuthCodeController::checkCode($data['phone'], $request->input('code'))) {
+                    return $this->fail('Неверный код', 403);
+                }
+
                 $token = $user->createToken('user-' . $user['id'])->plainTextToken;
                 DB::table('users')->where('phone', $data['phone'])->update(['remember_token' => $token]);
 
@@ -37,10 +43,27 @@ class AuthController extends BaseController
             }
         }
 
+        if (!AuthCodeController::checkCode($data['phone'], $request->input('code'))) {
+            return $this->fail('Неверный код', 403);
+        }
+
+        if (empty($user['remember_token'])) {
+            $token = $user->createToken('user-' . $user['id'])->plainTextToken;
+            DB::table('users')->where('phone', $data['phone'])->update(['remember_token' => $token]);
+        }
+
+        // TODO: Запрашивает пароль
+        if (Auth::attempt([
+            'phone' => $data['phone'],
+            'remember_token' => User::where('phone', $data['phone'])->first()['remember_token'],
+        ])) {
+            $request->session()->regenerate();
+        }
+
         return $this->success([
             'status' => 200,
-//            'user' => DB::table('users')->where('phone', $data['phone'])->first(),
-            'pass_key' => substr($data['phone'], -4),
+            'user' => Auth::user(),
+            'token' => User::where('phone', $data['phone'])->first()['remember_token'],
         ]);
     }
 }
