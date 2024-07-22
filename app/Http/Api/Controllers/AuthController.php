@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class AuthController extends BaseController
 {
-    public function register(Request $request)
+    public function auth(Request $request)
     {
         $data = $request->validate([
             'phone' => 'required|min:11|max:11',
@@ -35,21 +35,6 @@ class AuthController extends BaseController
             } catch (\Exception $e) {
                 $this->fail($e->getMessage(), 500);
             }
-        }
-
-        return $this->fail('Пользователь с таким номером уже существует. Пожалуйста, авторизуйтесь', 403);
-    }
-
-    public function auth(Request $request)
-    {
-        $data = $request->validate([
-            'phone' => 'required|min:11|max:11',
-        ]);
-
-        $user = User::where('phone', $data['phone'])->first();
-
-        if (!$user) {
-            return $this->fail('Пользователь не найден', 401);
         }
 
         return $this->success([
