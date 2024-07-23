@@ -23,12 +23,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
 
 
-        $exceptions->render(function (Exception $e, \Illuminate\Http\Request $request) {
+        $exceptions->render(function (Throwable $e, \Illuminate\Http\Request $request) {
             if ($request->is('api/*')) {
 
                 $error_code = $code = ApiException::INTERNAL_ERROR;
                 $reason = $e->getMessage();
                 $message = ApiException::getErrorMessage($error_code);
+
                 if ($e instanceof ApiException) {
                     $code = $e->getCode();
                     $error_code = $e->getErrorCode();

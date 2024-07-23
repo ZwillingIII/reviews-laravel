@@ -25,3 +25,8 @@ Route::post('like', [\App\Http\Api\Controllers\PostsLikesController::class, 'set
 //    return response()->json($ar);
 //})
 //->middleware(['auth:sanctum']);
+
+Route::get('/1', function (){
+    $user = \App\Models\User::find(13);
+    dd($user->toArray());
+});

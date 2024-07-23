@@ -9,6 +9,29 @@ use Illuminate\Support\Facades\DB;
 
 class AuthController extends BaseController
 {
+    // TODO: переписать под модель User
+    public function register($phone, $code)
+    {
+        try {
+
+            $user = User::create(['phone' => $phone]);
+
+
+            if (!AuthCodeController::checkCode($phone, $code)) {
+                return $this->fail('Неверный код', 403);
+            }
+
+            $token = $user->createToken('user-' . $user['id'])->plainTextToken;
+//            DB::table('users')->where('phone', $phone)->update(['remember_token' => $token]);
+
+            return $this->success([
+                'token' => $token,
+            ]);
+        } catch (\Exception $e) {
+            $this->fail($e->getMessage(), 500);
+        }
+    }
+
     public function auth(Request $request)
     {
         $data = $request->validate([
@@ -16,31 +39,10 @@ class AuthController extends BaseController
             'code' => 'required|min:4|max:4'
         ]);
 
-        $user = User::where('phone', $data['phone'])->first();
+        $user = User::firstWhere('phone', $data['phone']);
 
         if (!$user) {
-            try {
-                DB::table('users')->insert([
-                    'phone' => $data['phone'],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-
-                $user = User::where('phone', $data['phone'])->first();
-
-                if (!AuthCodeController::checkCode($data['phone'], $request->input('code'))) {
-                    return $this->fail('Неверный код', 403);
-                }
-
-                $token = $user->createToken('user-' . $user['id'])->plainTextToken;
-                DB::table('users')->where('phone', $data['phone'])->update(['remember_token' => $token]);
-
-                return $this->success([
-                    'token' => $token,
-                ]);
-            } catch (\Exception $e) {
-                $this->fail($e->getMessage(), 500);
-            }
+            $this->register($data['phone'], $request->get('code'));
         }
 
         if (!AuthCodeController::checkCode($data['phone'], $request->input('code'))) {

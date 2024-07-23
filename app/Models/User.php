@@ -18,7 +18,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'phone',
-        'remember_token'
+        'remember_token',
+        'name'
     ];
 
     /**
