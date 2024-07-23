@@ -38,8 +38,7 @@ class PostsLikesController extends BaseController
             }
 
             return $this->success([
-                $res,
-                $like->id
+                $res
             ]);
         } catch (\Exception $e) {
             return $this->fail($e->getMessage());
