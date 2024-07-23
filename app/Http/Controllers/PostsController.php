@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Api\Controllers\BaseController;
+use App\Http\Api\Controllers\ReviewsController;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -51,5 +52,16 @@ class PostsController extends BaseController
     public function setOrder($order)
     {
         $this->orderBy = $order;
+    }
+
+    public function getPostWithReviews($id)
+    {
+        $post = $this->getPost($id);
+        $reviews = (new ReviewsController)->getReviewsByPost($post->id);
+
+        return $this->success([
+            'post' => $post,
+            'reviews' => $reviews
+        ]);
     }
 }
