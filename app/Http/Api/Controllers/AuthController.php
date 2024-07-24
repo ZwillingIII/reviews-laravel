@@ -22,14 +22,36 @@ class AuthController extends BaseController
             }
 
             $token = $user->createToken('user-' . $user['id'])->plainTextToken;
-//            DB::table('users')->where('phone', $phone)->update(['remember_token' => $token]);
+            $user->remember_token = $token;
+            $user->save();
 
             return $this->success([
-                'token' => $token,
+                'token' => $user,
             ]);
         } catch (\Exception $e) {
-            $this->fail($e->getMessage(), 500);
+            return $this->fail($e->getMessage(), 500);
         }
+    }
+
+    public function login($phone, $code)
+    {
+        if (!AuthCodeController::checkCode($phone, $code)) {
+            return $this->fail('Неверный код', 403);
+        }
+
+        $user = User::firstWhere('phone', $phone);
+
+        if (empty($user['remember_token'])) {
+            $token = $user->createToken('user-' . $user['id'])->plainTextToken;
+            $user->remember_token = $token;
+            $user->save();
+        }
+
+        return $this->success([
+            'status' => 200,
+            'user' => Auth::user(),
+            'token' => User::firstWhere('phone', $phone)['remember_token'],
+        ]);
     }
 
     public function auth(Request $request)
@@ -42,22 +64,9 @@ class AuthController extends BaseController
         $user = User::firstWhere('phone', $data['phone']);
 
         if (!$user) {
-            $this->register($data['phone'], $request->get('code'));
+            return $this->register($data['phone'], $request->get('code'));
         }
 
-        if (!AuthCodeController::checkCode($data['phone'], $request->input('code'))) {
-            return $this->fail('Неверный код', 403);
-        }
-
-        if (empty($user['remember_token'])) {
-            $token = $user->createToken('user-' . $user['id'])->plainTextToken;
-            DB::table('users')->where('phone', $data['phone'])->update(['remember_token' => $token]);
-        }
-
-        return $this->success([
-            'status' => 200,
-            'user' => Auth::user(),
-            'token' => User::where('phone', $data['phone'])->first()['remember_token'],
-        ]);
+        return $this->login($data['phone'], $request->get('code'));
     }
 }
