@@ -16,7 +16,7 @@ class ReviewsController extends BaseController
         return Reviews::where('user_id', $id)->get();
     }
 
-    public function getReviewsByPost($id)
+    public static function getReviewsByPost($id)
     {
         return Reviews::where('post_id', $id)->get();
     }

@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-
+    return '2';
+echo 2; die();
     $user = \App\Models\User::findOrFail(13);
     $user->name = 'werty';
     $user->phone =6789;

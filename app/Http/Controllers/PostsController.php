@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\ApiException;
 use App\Http\Api\Controllers\BaseController;
 use App\Http\Api\Controllers\ReviewsController;
+use App\Http\Api\Requests\PostCreateRequest;
+use App\Http\Api\Resources\PostDetailResource;
+use App\Http\Api\Resources\PostResource;
+use App\Models\Posts;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -11,37 +16,46 @@ use Illuminate\Support\Facades\DB;
 class PostsController extends BaseController
 {
     private $count = 10;
-    private const TABLE = 'posts';
     private $orderBy = 'created_at';
+
+    // TODO: сделать почище, исправить ошибки, полвучение поста с отзывами сделать с помощью Relations
 
     public function getPosts()
     {
-        return DB::table(self::TABLE)->orderBy($this->orderBy)->paginate($this->count);
+//        return Posts::orderBy($this->orderBy)
+//            ->paginate($this->count);
+
+        $posts = Posts::all();
+
+        return $this->success(['posts' => PostResource::collection($posts)]);
+
+
     }
 
-    public function addPost(Request $request) : JsonResponse
+    /**
+     * @throws ApiException
+     */
+    public function addPost(PostCreateRequest $request) : JsonResponse
     {
         try {
-            $res = DB::table(self::TABLE)->insert([
+            $post = Posts::create([
                 'title' => $request->input('title'),
                 'description' => $request->input('description'),
-                'created_at' => now(),
-                'updated_at' => now()
             ]);
 
             return $this->success([
-                'status' => 200,
-                'message' => 'Post created successfully',
-                'data' => $res
+                'post' => new PostDetailResource($post)
             ]);
         } catch (\Exception $e) {
-            return $this->fail('Post creation failed: ' . $e->getMessage());
+            throw new ApiException('Не удалось создать пост', 500, 500);
         }
     }
 
     public function getPost($id)
     {
-        return DB::table(self::TABLE)->where('id', $id)->first();
+
+        $post = Posts::find($id);
+        return $this->success(['post' => new PostDetailResource($post)]);
     }
 
     public function setCount($count)
@@ -57,7 +71,7 @@ class PostsController extends BaseController
     public function getPostWithReviews($id)
     {
         $post = $this->getPost($id);
-        $reviews = (new ReviewsController)->getReviewsByPost($post->id);
+        $reviews = ReviewsController::getReviewsByPost($post->id);
 
         return $this->success([
             'post' => $post,

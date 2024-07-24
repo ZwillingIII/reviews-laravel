@@ -9,17 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 class AuthController extends BaseController
 {
-    // TODO: переписать под модель User
     public function register($phone, $code)
     {
         try {
-
             $user = User::create(['phone' => $phone]);
-
-
-            if (!AuthCodeController::checkCode($phone, $code)) {
-                return $this->fail('Неверный код', 403);
-            }
 
             $token = $user->createToken('user-' . $user['id'])->plainTextToken;
             $user->remember_token = $token;
@@ -35,22 +28,14 @@ class AuthController extends BaseController
 
     public function login($phone, $code)
     {
-        if (!AuthCodeController::checkCode($phone, $code)) {
-            return $this->fail('Неверный код', 403);
-        }
-
         $user = User::firstWhere('phone', $phone);
 
-        if (empty($user['remember_token'])) {
-            $token = $user->createToken('user-' . $user['id'])->plainTextToken;
-            $user->remember_token = $token;
-            $user->save();
-        }
+        $token = $user->createToken('user-' . $user['id'])->plainTextToken;
+        $user->remember_token = $token;
+        $user->save();
 
         return $this->success([
-            'status' => 200,
-            'user' => Auth::user(),
-            'token' => User::firstWhere('phone', $phone)['remember_token'],
+            'token' => $token,
         ]);
     }
 
@@ -60,6 +45,10 @@ class AuthController extends BaseController
             'phone' => 'required|min:11|max:11',
             'code' => 'required|min:4|max:4'
         ]);
+
+        if (!AuthCodeController::checkCode($data['phone'], $request->input('code'))) {
+            return $this->fail('Неверный код', 403);
+        }
 
         $user = User::firstWhere('phone', $data['phone']);
 
