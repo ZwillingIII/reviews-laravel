@@ -14,8 +14,8 @@ Route::post('validate', [ValidationController::class, 'phoneValidate'])->name('a
 Route::prefix('posts')->group(function () {
     Route::get('/', [PostsController::class, 'getPosts']);
     Route::get('/{id}', [PostsController::class, 'getPostWithReviews']);
-    Route::post('/', [PostsController::class, 'addPost'])//        ->middleware(['auth:sanctum'])
-    ;
+    Route::post('/', [PostsController::class, 'addPost'])
+        ->middleware(['auth:sanctum']);
 });
 
 Route::prefix('reviews')->group(function () {

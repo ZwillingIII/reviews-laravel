@@ -6,12 +6,12 @@ use App\Exceptions\ApiException;
 use App\Http\Api\Controllers\BaseController;
 use App\Http\Api\Controllers\ReviewsController;
 use App\Http\Api\Requests\PostCreateRequest;
+use App\Http\Api\Requests\PostsGetRequest;
 use App\Http\Api\Resources\PostDetailResource;
 use App\Http\Api\Resources\PostResource;
 use App\Models\Posts;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 
 class PostsController extends BaseController
 {
@@ -20,16 +20,17 @@ class PostsController extends BaseController
 
     // TODO: сделать почище, исправить ошибки, полвучение поста с отзывами сделать с помощью Relations
 
-    public function getPosts()
+    public function getPosts(PostsGetRequest $request) : JsonResponse
     {
-//        return Posts::orderBy($this->orderBy)
-//            ->paginate($this->count);
 
-        $posts = Posts::all();
+        // TODO: forPage работает не так, как планировалось
+        $posts = Posts::all()
+            ->sortBy($request->get('sort'))
+            ->forPage($request->get('count'), $request->get('page'));
 
-        return $this->success(['posts' => PostResource::collection($posts)]);
-
-
+        return $this->success([
+            'posts' => PostResource::collection($posts)
+        ]);
     }
 
     /**
