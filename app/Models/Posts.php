@@ -12,4 +12,9 @@ class Posts extends Model
     protected $guarded = [
         'id'
     ];
+
+    public function reviews()
+    {
+        return $this->hasMany(Reviews::class);
+    }
 }

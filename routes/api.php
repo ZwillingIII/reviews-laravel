@@ -12,9 +12,9 @@ Route::post('auth', [AuthController::class, 'auth'])->name('api.auth');
 Route::post('validate', [ValidationController::class, 'phoneValidate'])->name('api.phone.validate');
 
 Route::prefix('posts')->group(function () {
-    Route::get('/', [PostsController::class, 'getPosts']);
+    Route::get('/', [PostsController::class, 'getPage']);
     Route::get('/{id}', [PostsController::class, 'getPostWithReviews']);
-    Route::post('/', [PostsController::class, 'addPost'])
+    Route::post('/', [PostsController::class, 'create'])
         ->middleware(['auth:sanctum']);
 });
 
