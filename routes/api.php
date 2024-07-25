@@ -15,7 +15,8 @@ Route::prefix('posts')->group(function () {
     Route::get('/', [PostsController::class, 'getPage']);
     Route::get('/{id}', [PostsController::class, 'getPost']);
     Route::post('/', [PostsController::class, 'create'])
-        ->middleware(['auth:sanctum']);
+        ->middleware(['auth:sanctum'])
+        ->middleware('throttle:25,1440');
 });
 
 Route::prefix('reviews')->group(function () {

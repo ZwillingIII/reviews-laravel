@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ApiException;
 use App\Http\Api\Controllers\BaseController;
-use App\Http\Api\Controllers\ReviewsController;
 use App\Http\Api\Requests\PostCreateRequest;
 use App\Http\Api\Requests\PostsGetRequest;
 use App\Http\Api\Resources\PostDetailResource;
