@@ -13,7 +13,7 @@ Route::post('validate', [ValidationController::class, 'phoneValidate'])->name('a
 
 Route::prefix('posts')->group(function () {
     Route::get('/', [PostsController::class, 'getPage']);
-    Route::get('/{id}', [PostsController::class, 'getPostWithReviews']);
+    Route::get('/{id}', [PostsController::class, 'getPost']);
     Route::post('/', [PostsController::class, 'create'])
         ->middleware(['auth:sanctum']);
 });

@@ -9,7 +9,6 @@ use App\Http\Api\Requests\PostCreateRequest;
 use App\Http\Api\Requests\PostsGetRequest;
 use App\Http\Api\Resources\PostDetailResource;
 use App\Http\Api\Resources\PostResource;
-use App\Http\Api\Resources\ReviewsResource;
 use App\Models\Posts;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -48,19 +47,11 @@ class PostsController extends BaseController
     public function getPost($id)
     {
         $post = Posts::find($id);
-//        return $this->success(['post' => new PostDetailResource($post)]);
+
+        if (is_null($post)) {
+            return throw new ApiException('Не найден пост', 404, 404);
+        }
+
         return new PostDetailResource($post);
-    }
-
-    public function getPostWithReviews($id)
-    {
-        $post = $this->getPost($id);
-//        $reviews = ReviewsController::getReviewsByPost($post->id);
-        $reviews = $post->reviews;
-
-        return $this->success([
-            'post' => $post,
-            'reviews' => $reviews
-        ]);
     }
 }

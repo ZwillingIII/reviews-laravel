@@ -16,9 +16,6 @@ class PostsFactory extends Factory
      */
     public function definition(): array
     {
-//        $faker = Faker::create('ru_RU');
-//        $randomSentence = $faker->realText();
-
         return [
             'title' => fake('ru_RU')->word(),
             'description' => fake('ru_RU')->realText(),

@@ -13,6 +13,7 @@ class PostDetailResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => $this->description,
+            'reviews' => ReviewsResource::collection($this->reviews)
         ];
     }
 }

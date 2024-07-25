@@ -19,7 +19,7 @@ class ReviewsFactory extends Factory
         return [
             'text' => fake()->text,
             'user_id' => fake()->numberBetween(1, 10),
-            'post_id' => fake()->numberBetween(1, 100),
+            'posts_id' => fake()->numberBetween(1, 100),
             'created_at' => now(),
             'updated_at' => now(),
         ];
