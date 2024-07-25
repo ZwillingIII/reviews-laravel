@@ -13,6 +13,7 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'description' => Str::limit($this->description, 150, ' бла бла бла'),
+            'image' => new FileResource($this->files)
         ];
     }
 }

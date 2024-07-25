@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\ApiException;
+use App\Helpers\Helpers;
 use App\Http\Api\Controllers\BaseController;
 use App\Http\Api\Requests\PostCreateRequest;
 use App\Http\Api\Requests\PostsGetRequest;
@@ -11,6 +12,7 @@ use App\Http\Api\Resources\PostResource;
 use App\Models\Posts;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 
 class PostsController extends BaseController
 {
@@ -30,16 +32,23 @@ class PostsController extends BaseController
     public function create(PostCreateRequest $request) : JsonResponse
     {
         try {
+            $file = $request->file('file');
+
+            if ($request->hasFile('image')) {
+                $file = Helpers::uploadFileFromRequest($request->file('image'), 'public', 'posts');
+            }
+
             $post = Posts::create([
                 'title' => $request->input('title'),
                 'description' => $request->input('description'),
+                'image' => $file?->id,
             ]);
 
             return $this->success([
-                'post' => new PostDetailResource($post)
+                'post' => new PostDetailResource($post),
             ]);
         } catch (\Exception $e) {
-            throw new ApiException('Не удалось создать пост', 500, 500);
+            throw new ApiException($e->getMessage(), 500, 500);
         }
     }
 

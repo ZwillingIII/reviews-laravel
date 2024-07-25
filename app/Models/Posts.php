@@ -17,4 +17,10 @@ class Posts extends Model
     {
         return $this->hasMany(Reviews::class);
     }
+
+    public function files()
+    {
+        return $this->belongsTo(File::class);
+    }
+
 }

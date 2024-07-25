@@ -9,6 +9,7 @@ class PostCreateRequest extends ApiRequest
         return [
             'title' => 'required|string|max:255',
             'description' => 'required|string|max:2550',
+            'image' => 'mimes:jpeg,png,jpg,gif,svg|max:2048',
         ];
     }
 
