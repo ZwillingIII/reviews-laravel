@@ -41,7 +41,7 @@ class PostsController extends BaseController
             $post = Posts::create([
                 'title' => $request->input('title'),
                 'description' => $request->input('description'),
-                'image' => $file?->id,
+                'files_id' => $file?->id,
             ]);
 
             return $this->success([

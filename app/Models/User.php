@@ -43,4 +43,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function image()
+    {
+        return $this->belongsTo(File::class);
+    }
 }

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('phone')->unique();
             $table->rememberToken();
+            $table->integer('files_id')->nullable();
             $table->timestamps();
         });
 
