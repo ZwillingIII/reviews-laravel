@@ -13,7 +13,7 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'phone' => $this->phone,
             'token' => $this->remember_token,
-            'img' => new FileResource($this->image)
+            'img' => new FileResource($this->files)
         ];
     }
 }

@@ -15,16 +15,16 @@ class AuthController extends BaseController
     {
         try {
             if ($image) {
-                $image = Helpers::uploadFileFromRequest($image, 'public', 'posts');
+                $image = Helpers::uploadFileFromRequest($image, 'public', 'users');
             }
 
             $user = User::create([
                 'phone' => $phone,
-                'files_id' => $image?->id,
             ]);
 
             $token = $user->createToken('user-' . $user['id'])->plainTextToken;
             $user->remember_token = $token;
+            $user->files_id = $image?->id;
             $user->save();
 
             return $this->success([

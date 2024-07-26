@@ -44,7 +44,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function image()
+    public function files()
     {
         return $this->belongsTo(File::class);
     }
