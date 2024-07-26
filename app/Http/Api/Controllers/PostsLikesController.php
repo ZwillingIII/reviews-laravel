@@ -2,7 +2,9 @@
 
 namespace App\Http\Api\Controllers;
 
+use App\Exceptions\ApiException;
 use App\Http\Api\Controllers\BaseController;
+use App\Models\PostsLikes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,19 +20,19 @@ class PostsLikesController extends BaseController
         ];
 
         try {
-            $like = DB::table('posts_likes')->where([
+            $like = PostsLikes::whereFirst([
                 'post_id' => $request->get('post_id'),
                 'user_id' => $request->get('user_id'),
-            ])->first();
+            ]);
 
             if (!$like) {
-                $res = DB::table(self::TABLE)->insert([
+                $res = PostsLikes::create([
                     'post_id' => $request->get('post_id'),
                     'user_id' => $request->get('user_id'),
                     'is_liked' => boolval($request->get('like'))
                 ]);
             } else {
-                $res = DB::table(self::TABLE)->where('id', $like->id)->update([
+                $res = PostsLikes::find($like->id)->update([
                     'post_id' => $request->get('post_id'),
                     'user_id' => $request->get('user_id'),
                     'is_liked' => boolval($request->get('like'))
