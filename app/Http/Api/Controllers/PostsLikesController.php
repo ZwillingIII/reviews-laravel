@@ -2,7 +2,6 @@
 
 namespace App\Http\Api\Controllers;
 
-use App\Exceptions\ApiException;
 use App\Http\Api\Controllers\BaseController;
 use App\Models\PostsLikes;
 use Illuminate\Http\Request;
@@ -20,10 +19,8 @@ class PostsLikesController extends BaseController
         ];
 
         try {
-            $like = PostsLikes::whereFirst([
-                'post_id' => $request->get('post_id'),
-                'user_id' => $request->get('user_id'),
-            ]);
+            $like = PostsLikes::where('post_id', $request->get('post_id'))
+                ->where('user_id', $request->get('user_id'))->first();
 
             if (!$like) {
                 $res = PostsLikes::create([
@@ -32,7 +29,7 @@ class PostsLikesController extends BaseController
                     'is_liked' => boolval($request->get('like'))
                 ]);
             } else {
-                $res = PostsLikes::find($like->id)->update([
+                $res = PostsLikes::firstWhere('id', $like->id)->update([
                     'post_id' => $request->get('post_id'),
                     'user_id' => $request->get('user_id'),
                     'is_liked' => boolval($request->get('like'))

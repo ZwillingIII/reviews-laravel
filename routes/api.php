@@ -35,7 +35,7 @@ Route::post('like', [PostsLikesController::class, 'setLike'])->middleware(['auth
 //})
 //->middleware(['auth:sanctum']);
 
-Route::get('/1', function () {
-    $user = User::find(13);
-    dd($user->toArray());
-});
+//Route::get('/1', function () {
+//    $user = User::find(13);
+//    dd($user->toArray());
+//});

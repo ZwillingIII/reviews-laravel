@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class PostsLikes extends Model
 {
     use HasFactory;
+
+    protected $table = 'posts_likes';
 }
