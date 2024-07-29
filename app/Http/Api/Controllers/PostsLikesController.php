@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\DB;
 
 class PostsLikesController extends BaseController
 {
-    private const TABLE = 'posts_likes';
-
     public function setLike(Request $request)
     {
         $res = [
