@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 
 class File extends Model
 {
@@ -12,4 +14,9 @@ class File extends Model
     protected $hidden = [
         'original'
     ];
+
+    public function getUrlAttribute()
+    {
+        return config('url') . '/' . $this->disk . '/' . $this->path . '/' . $this->name;
+    }
 }

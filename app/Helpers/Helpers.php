@@ -22,6 +22,7 @@ class Helpers
         $file->original = $uploadedFile->getClientOriginalName();
         $file->size = $uploadedFile->getSize();
         $file->save();
+
         return $file;
     }
 }

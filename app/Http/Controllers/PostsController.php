@@ -44,8 +44,6 @@ class PostsController extends BaseController
                 'files_id' => $file?->id,
             ]);
 
-
-
             return $this->success([
                 'post' => new PostDetailResource($post),
             ]);

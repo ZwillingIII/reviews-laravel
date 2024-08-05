@@ -12,7 +12,7 @@ class FileResource extends JsonResource
             'id' => $this->id,
             'size' => $this->size,
             'type' => $this->type,
-            'path' => storage_path('app/' . $this->disk . '/' . $this->path) . '/' . $this->name
+            'path' => $this->url
         ];
     }
 }
