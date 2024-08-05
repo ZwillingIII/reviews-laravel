@@ -15,27 +15,15 @@ Route::prefix('posts')->group(function () {
     Route::get('/', [PostsController::class, 'getPage']);
     Route::get('/{id}', [PostsController::class, 'getPost']);
     Route::post('/', [PostsController::class, 'create'])
-//        ->middleware(['auth:sanctum'])
-//        ->middleware('throttle:2,1440')
-    ;
+        ->middleware(['auth:sanctum'])
+        ->middleware('throttle:2,1440');
 });
 
 Route::prefix('reviews')->group(function () {
     Route::get('/user/{id}', [ReviewsController::class, 'getReviewsByUser']);
     Route::get('/post/{id}', [ReviewsController::class, 'getReviewsByPost']);
-    Route::post('/add/{id}', [ReviewsController::class, 'addReview'])
+    Route::post('/add', [ReviewsController::class, 'addReview'])
         ->middleware(['auth:sanctum']);
 });
 
 Route::post('like', [PostsLikesController::class, 'setLike'])->middleware(['auth:sanctum']);
-//Route::post('/test',function (){
-//    $ar = ['success' => true, 'payload' => request()->all()];
-//
-//    return response()->json($ar);
-//})
-//->middleware(['auth:sanctum']);
-
-//Route::get('/1', function () {
-//    $user = User::find(13);
-//    dd($user->toArray());
-//});

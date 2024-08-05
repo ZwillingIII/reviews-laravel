@@ -19,14 +19,25 @@ class ReviewsController extends BaseController
         return Reviews::where('post_id', $id)->get();
     }
 
-    public function addReview(Request $request, $id)
+    public function addReview(Request $request)
     {
-        return Reviews::create([
-            'user_id' => $id,
-            'post_id' => $request->input('post_id'),
-            'text' => $request->input('text'),
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
+        try {
+            $userId = auth()->user()?->id;
+            $data = [
+                'user_id' => $userId,
+                'posts_id' => $request->input('post_id'),
+                'text' => $request->input('text'),
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+
+//            return $data;
+
+            $res = Reviews::query()->create($data);
+
+            return $this->success($res);
+        } catch (\Exception $e) {
+            return $this->fail($e->getMessage());
+        }
     }
 }

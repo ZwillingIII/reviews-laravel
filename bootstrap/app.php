@@ -85,4 +85,8 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
 
-    })->create();
+    })
+    ->withEvents(discover: [
+        __DIR__ . '../app/Listeners',
+    ])
+    ->create();

@@ -29,6 +29,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'remember_token',
+        'password'
     ];
 
     /**
@@ -44,6 +45,7 @@ class User extends Authenticatable
         ];
     }
 
+    // TODO: Лучше бы назвал этот метод и таблицу как images
     public function files()
     {
         return $this->belongsTo(File::class);

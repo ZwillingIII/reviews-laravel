@@ -44,6 +44,8 @@ class PostsController extends BaseController
                 'files_id' => $file?->id,
             ]);
 
+
+
             return $this->success([
                 'post' => new PostDetailResource($post),
             ]);
@@ -52,7 +54,7 @@ class PostsController extends BaseController
         }
     }
 
-    public function getPost($id)
+    public function getPost($id) : PostDetailResource
     {
         $post = Posts::find($id);
 
@@ -61,5 +63,11 @@ class PostsController extends BaseController
         }
 
         return new PostDetailResource($post);
+    }
+
+    // TODO: организовать поиск через Eloquent
+    public function search(string $text)
+    {
+
     }
 }
