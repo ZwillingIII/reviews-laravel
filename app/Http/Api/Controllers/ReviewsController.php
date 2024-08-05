@@ -31,8 +31,6 @@ class ReviewsController extends BaseController
                 'updated_at' => now()
             ];
 
-//            return $data;
-
             $res = Reviews::query()->create($data);
 
             return $this->success($res);
