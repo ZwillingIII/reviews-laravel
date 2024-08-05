@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\PostCreateEvent;
+use App\Listeners\PostCreateListener;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +22,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Event::listen(
+            PostCreateEvent::class,
+            PostCreateListener::class
+        );
     }
 }

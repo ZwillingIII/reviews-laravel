@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostCreateEvent;
 use App\Exceptions\ApiException;
 use App\Helpers\Helpers;
 use App\Http\Api\Controllers\BaseController;
@@ -43,6 +44,8 @@ class PostsController extends BaseController
                 'description' => $request->input('description'),
                 'files_id' => $file?->id,
             ]);
+
+            PostCreateEvent::dispatch($post);
 
             return $this->success([
                 'post' => new PostDetailResource($post),

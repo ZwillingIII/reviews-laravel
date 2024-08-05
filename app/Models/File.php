@@ -17,6 +17,6 @@ class File extends Model
 
     public function getUrlAttribute()
     {
-        return config('url') . '/' . $this->disk . '/' . $this->path . '/' . $this->name;
+        return config('app.url') . '/' . $this->disk . '/' . $this->path . '/' . $this->name;
     }
 }

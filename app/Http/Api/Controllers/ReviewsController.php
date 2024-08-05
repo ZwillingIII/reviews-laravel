@@ -3,6 +3,7 @@
 namespace App\Http\Api\Controllers;
 
 use App\Http\Api\Controllers\BaseController;
+use App\Jobs\SendReviewsJob;
 use App\Models\Reviews;
 use Illuminate\Http\Request;
 
@@ -32,6 +33,8 @@ class ReviewsController extends BaseController
             ];
 
             $res = Reviews::query()->create($data);
+
+            SendReviewsJob::dispatch($res);
 
             return $this->success($res);
         } catch (\Exception $e) {

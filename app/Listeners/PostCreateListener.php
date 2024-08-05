@@ -6,6 +6,7 @@ use App\Events\PostCreateEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
+
 class PostCreateListener
 {
     /**
@@ -21,6 +22,6 @@ class PostCreateListener
      */
     public function handle(PostCreateEvent $event): void
     {
-
+        \Log::info('post created id='.$event->posts->id);
     }
 }
