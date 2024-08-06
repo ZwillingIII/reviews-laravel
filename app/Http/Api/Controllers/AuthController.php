@@ -5,6 +5,7 @@ namespace App\Http\Api\Controllers;
 use App\Helpers\Helpers;
 use App\Http\Api\Resources\UserResource;
 use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +27,8 @@ class AuthController extends BaseController
             $user->remember_token = $token;
             $user->files_id = $image?->id;
             $user->save();
+
+            $user->notify(new UserNotification($user));
 
             return $this->success([
                 'token' => new UserResource($user),
