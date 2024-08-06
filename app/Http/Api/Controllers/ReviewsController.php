@@ -32,7 +32,7 @@ class ReviewsController extends BaseController
                 'updated_at' => now()
             ];
 
-            $res = Reviews::query()->create($data);
+            $res = Reviews::create($data);
 
             SendReviewsJob::dispatch($res);
 

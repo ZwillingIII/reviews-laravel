@@ -29,6 +29,7 @@ class AuthController extends BaseController
 
             return $this->success([
                 'token' => new UserResource($user),
+                'message' => __('messages.welcome')
             ]);
         } catch (\Exception $e) {
             return $this->fail($e->getMessage(), 500);
@@ -45,6 +46,7 @@ class AuthController extends BaseController
 
         return $this->success([
             'token' => $token,
+            'message' => __('messages.welcome')
         ]);
     }
 
