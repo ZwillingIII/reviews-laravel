@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Api\Controllers;
 
 use App\Events\PostCreateEvent;
 use App\Exceptions\ApiException;
 use App\Helpers\Helpers;
-use App\Http\Api\Controllers\BaseController;
+use App\Helpers\PostHelper;
 use App\Http\Api\Requests\PostCreateRequest;
 use App\Http\Api\Requests\PostsGetRequest;
 use App\Http\Api\Resources\PostDetailResource;
 use App\Http\Api\Resources\PostResource;
 use App\Models\Posts;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Pipeline\Pipeline;
+use PhpParser\Builder;
 
 class PostsController extends BaseController
 {
@@ -25,6 +25,15 @@ class PostsController extends BaseController
         return $this->success([
             'posts' => PostResource::collection($posts)
         ]);
+    }
+
+    // TODO: пробую Pipelines
+    public function pipline(PostsGetRequest $query)
+    {
+        return app(Pipeline::class)
+            ->send($query)
+            ->through(app(PostHelper::class))
+            ->thenReturn();
     }
 
     /**
